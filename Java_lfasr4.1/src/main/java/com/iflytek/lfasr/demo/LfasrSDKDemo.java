@@ -5,6 +5,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.iflytek.msp.lfasr.LfasrClient;
 import com.iflytek.msp.lfasr.model.Message;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -25,7 +31,7 @@ public class LfasrSDKDemo {
     //1、绝对路径：D:\......\demo-3.0\src\main\resources\audio\lfasr.wav
     //2、相对路径：./resources/audio/lfasr.wav
     //3、通过classpath：
-    private static final String AUDIO_FILE_PATH = LfasrSDKDemo.class.getResource("/").getPath()+"/audio/lfasr.wav";
+    private static final String AUDIO_FILE_PATH = "C:\\Users\\lenovo\\Desktop\\pythonProject\\Speech-Text-Abstracts\\resources\\audio\\lfasr.wav";
     //private static final String AUDIO_FILE_PATH = "D:\\javaprojects\\Java_lfasr\\src\\main\\resources\\audio\\lfasr.wav";
     /**
      * 注意：同时只能执行一个 示例
@@ -33,9 +39,17 @@ public class LfasrSDKDemo {
      * @param args a
      * @throws InterruptedException e
      */
+    public static void getsth() {
+		try {
+			performance();
+		} catch (InterruptedException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
     public static void main(String[] args) throws InterruptedException {
         // 示例-1：标准用法
-        //standard();
+       // standard();
 
         // 示例-2：使用扩展业务参数
         //businessExtraParams();
@@ -44,15 +58,24 @@ public class LfasrSDKDemo {
         //netProxy();
 
         // 示例-4：使用性能调优参数
-        performance();
+        try {
+			performance();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     /**
      * 简单 demo 样例
      *
      * @throws InterruptedException e
+     * @throws IOException 
      */
-    private static void standard() throws InterruptedException {
+    public static void standard() throws InterruptedException, IOException {
         //1、创建客户端实例
         LfasrClient lfasrClient = LfasrClient.getInstance(APP_ID, SECRET_KEY);
 
@@ -75,6 +98,14 @@ public class LfasrSDKDemo {
         System.out.println("转写结果: \n" + result.getData());
         //System.out.println(result.getData());
 
+File f=new File("音频文件.txt");//指定文件
+
+FileOutputStream fos=new FileOutputStream(f);//创建输出流fos并以f为参数
+OutputStreamWriter osw=new OutputStreamWriter(fos);//创建字符输出流对象osw并以fos为参数
+BufferedWriter bw=new BufferedWriter(osw);//创建一个带缓冲的输出流对象bw，并以osw为参数
+bw.write(result.getData().toString());//使用bw写入一行文字，为字符串形式String
+bw.newLine();//换行
+bw.close();//关闭并保存
         //退出程序，关闭线程资源，仅在测试main方法时使用。
         System.exit(0);
     }
@@ -180,11 +211,12 @@ public class LfasrSDKDemo {
      * 性能调优参数，调用样例
      *
      * @throws InterruptedException e
+     * @throws IOException 
      */
-    private static void performance() throws InterruptedException {
+    private static void performance() throws InterruptedException, IOException {
         //1、创建客户端实例, 设置性能参数
-        LfasrClient lfasrClient =
-                LfasrClient.getInstance(
+        //LfasrClient lfasrClient =
+               /* LfasrClient.getInstance(
                         APP_ID,
                         SECRET_KEY,
                         10, //线程池：核心线程数
@@ -192,8 +224,8 @@ public class LfasrSDKDemo {
                         50, //网络：最大连接数
                         10000, //连接超时时间
                         30000, //响应超时时间
-                        null);
-        //LfasrClient lfasrClient = LfasrClient.getInstance(APP_ID, SECRET_KEY);
+                        null);*/
+        LfasrClient lfasrClient = LfasrClient.getInstance(APP_ID, SECRET_KEY);
 
 
         //2、上传
@@ -224,6 +256,14 @@ public class LfasrSDKDemo {
         Message result = lfasrClient.getResult(taskId);
         System.out.println("转写结果: \n" + result.getData());
 
+File f=new File("音频文件.txt");//指定文件
+
+FileOutputStream fos=new FileOutputStream(f);//创建输出流fos并以f为参数
+OutputStreamWriter osw=new OutputStreamWriter(fos);//创建字符输出流对象osw并以fos为参数
+BufferedWriter bw=new BufferedWriter(osw);//创建一个带缓冲的输出流对象bw，并以osw为参数
+bw.write(result.getData().toString());//使用bw写入一行文字，为字符串形式String
+bw.newLine();//换行
+bw.close();//关闭并保存
 
         //退出程序，关闭线程资源，仅在测试main方法时使用。
         System.exit(0);
